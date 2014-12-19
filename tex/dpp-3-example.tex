@@ -1,0 +1,168 @@
+\documentclass[11pt]{article}
+\usepackage[%
+  papersize={12.8cm,9.6cm},
+  hmargin=0cm,%
+  vmargin=0.5mm,%
+  head=0.5cm,% might be changed later
+  headsep=0pt,%
+  foot=0.5cm% might be changed later
+  ]{geometry}% http://ctan.org/pkg/geometry
+\usepackage{xcolor}
+\usepackage{ifthen}
+\usepackage{pgf}
+\usepackage[fleqn]{amsmath}
+\usepackage{hyperref}
+\hypersetup{pdfborder={0 0 0}, colorlinks=true, urlcolor=blue, linkcolor=blue, citecolor=blue}
+\usepackage{caption}
+\captionsetup[figure]{font=scriptsize, labelformat=empty, textformat=simple, justification=centering, skip=2pt}
+\usepackage{tikz}
+\usetikzlibrary{trees,calc,backgrounds}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% The `conc` macro is the concentration parameter of the Dirichlet process.
+% Set it to the desired value here. Delete (or comment out) the `conc` macro to
+% leave probability values blank.
+\pgfmathsetmacro\conc{0.5}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\pclass}[3]{%
+    \ifthenelse{\equal{#1}{}}%
+        {}%
+        {\fcolorbox{blue!90}{blue!15}{\catformat{#1}}}%
+    \ifthenelse{\equal{#2}{}}%
+        {}%
+        {\fcolorbox{red!90}{red!15}{\catformat{#2}}}%
+    \ifthenelse{\equal{#3}{}}%
+        {}%
+        {\fcolorbox{gray!90}{gray!15}{\catformat{#3}}}%
+}
+\newcommand{\catformat}[1]{\textsf{\textbf{#1}}}
+\newcommand{\pcat}[3]{%
+    \textcolor{blue}{\catformat{#1}}%
+    \textcolor{red}{\catformat{#2}}%
+    \textcolor{black}{\catformat{#3}}%
+}
+\newcommand{\branchlabel}[1]{\normalsize #1}
+\newcommand{\tiplabel}[1]{\normalsize #1}
+
+\newcommand{\calcprob}[2]{%
+    \ifthenelse{\isundefined{\conc}}%
+        {}%
+        {\pgfmathparse{(#1/(\conc+1))*(#2/(\conc+2))}\pgfmathprintnumber{\pgfmathresult}}%
+}
+
+\newcommand{\getconc}[1]{%
+    \ifthenelse{\isundefined{\conc}}%
+        {}%
+        {\conc}%
+}
+
+
+\begin{document}
+
+% Set the overall layout of the tree
+\tikzstyle{level 1}=[level distance=8em, sibling distance=13em]
+\tikzstyle{level 2}=[level distance=11em, sibling distance=5em]
+
+% Define styles
+\tikzstyle{root} = []
+\tikzstyle{internal} = []
+\tikzstyle{tip} = [text width = 3.5em]
+\tikzstyle{branch} = [->, very thick]
+
+\begin{center}
+    {\LARGE $\boldsymbol{\alpha =} \mathbf{\getconc{}}$} \\
+\end{center}
+
+\noindent
+\begin{tikzpicture}[grow=right]%, sloped]
+\pgfkeys{/pgf/number format/.cd,fixed,fixed zerofill,precision=3}
+% \pgfkeys{/pgf/number format/.cd,std,fixed zerofill,precision=3}
+\node[root] {\pclass{A}{}{}}
+    child {
+        node[internal] {\pclass{A}{B}{}}        
+            child {
+                node[tip, label=right:
+                    {\tiplabel{
+                        $
+                        % p(m = 123)=
+                        \left(\frac{\alpha}{\alpha+1}\right)\left(\frac{\alpha}{\alpha+2}\right)
+                        = \calcprob{\conc}{\conc}$
+                        }}]
+                    {\pclass{A}{B}{C}}
+                edge from parent [style = branch]
+                node[above,
+                    label={[label distance = 0.2em]\branchlabel{$\frac{\alpha}{\alpha+2}$}}
+                    ] {}
+            }
+            child {
+                node[tip, label=right:
+                    {\tiplabel{
+                        $
+                        % p(m = 121)=
+                        \left(\frac{\alpha}{\alpha+1}\right)\left(\frac{1}{\alpha+2}\right)
+                        = \calcprob{\conc}{1}$
+                        }}]
+                    {\pclass{AC}{B}{}}
+                edge from parent [style = branch]
+                node[above,
+                    label={\branchlabel{$\frac{1}{\alpha+2}$}}
+                    ] {}
+            }
+            child {
+                node[tip, label=right:
+                    {\tiplabel{
+                        $
+                        % p(m = 122)=
+                        \left(\frac{\alpha}{\alpha+1}\right)\left(\frac{1}{\alpha+2}\right)
+                        = \calcprob{\conc}{1}$
+                         }}]
+                     {\pclass{A}{BC}{}}
+                edge from parent [style = branch]
+                node[above,
+                    label={[label distance = 0.2em]\branchlabel{$\frac{1}{\alpha+2}$}}
+                    ] {}
+            }
+            edge from parent [style = branch]
+            node[above,
+                label={[label distance = 0.5em]\branchlabel{$\frac{\alpha}{\alpha+1}$}}
+                ] {}
+    }
+    child {
+        node[internal] {\pclass{AB}{}{}}        
+        child {
+                node[tip, label=right:
+                    {\tiplabel{
+                        $
+                        % p(m = 112)=
+                        \left(\frac{1}{\alpha+1}\right)\left(\frac{\alpha}{\alpha+2}\right)
+                        = \calcprob{1}{\conc}$
+                        }}]
+                    {\pclass{AB}{C}{}}
+                edge from parent [style = branch]
+                node[above,
+                    label={\branchlabel{$\frac{\alpha}{\alpha+2}$}}
+                    ] {}
+            }
+            child {
+                node[tip, label=right:
+                    {\tiplabel{
+                        $
+                        % p(m = 111)=
+                        \left(\frac{1}{\alpha+1}\right)\left(\frac{2}{\alpha+2}\right)
+                        = \calcprob{1}{2}$
+                        }}]
+                    {\pclass{ABC}{}{}}
+                edge from parent [style = branch]
+                node[above,
+                    label={\branchlabel{$\frac{2}{\alpha+2}$}}
+                    ] {}
+            }
+            edge from parent [style = branch]
+            node[above,
+                label={[label distance = 0.5em]\branchlabel{$\frac{1}{\alpha+1}$}}
+                ] {}
+    };
+\end{tikzpicture}
+
+\end{document}
