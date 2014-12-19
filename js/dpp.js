@@ -1,4 +1,7 @@
-function run_dpp_demo(size_multiplier, font_size_multiplier, num_variables, image_path) {
+function run_dpp_demo(size_multiplier,
+        font_size_multiplier,
+        num_variables,
+        image_path) {
     var nv = get_num_variables(num_variables);
     var image_width = 1358;
     var image_height = 1388;
@@ -6,8 +9,10 @@ function run_dpp_demo(size_multiplier, font_size_multiplier, num_variables, imag
         var image_width = 600;
         var image_height = 450;
     }
-    size_multiplier = typeof size_multiplier !== 'undefined' ?  size_multiplier : 0.7;
-    font_size_multiplier = typeof font_size_multiplier !== 'undefined' ?  font_size_multiplier : 1.0;
+    size_multiplier = typeof size_multiplier !== 'undefined' ?
+            size_multiplier : 0.7;
+    font_size_multiplier = typeof font_size_multiplier !== 'undefined' ?
+            font_size_multiplier : 1.0;
     create_dpp_form(nv, image_path, font_size_multiplier);
     var a = validate_dpp_form(nv);
     var medium = create_dpp_canvas(
@@ -43,8 +48,9 @@ function create_dpp_form(num_variables, image_path, font_size_multiplier) {
     b.setAttribute("type", "button");
     b.setAttribute("id", "update_" + nv + "_button");
     b.setAttribute("value", "Update");
-    // b.setAttribute("onclick", "update_dpp_tree(" + nv + ",\"" + image_path + "\" + ",\"" + font_size_multiplier + "\");");
-    b.setAttribute("onclick", "update_dpp_tree(" + nv + ",\"" + image_path + "\"" + ",\"" + font_size_multiplier + "\");");
+    b.setAttribute("onclick", "update_dpp_tree(" + nv + 
+            ",\"" + image_path + "\"" +
+            ",\"" + font_size_multiplier + "\");");
     i = document.createElement("input");
     i.setAttribute("type", "text");
     i.setAttribute("name", "StackOverflow1370021");
@@ -78,7 +84,8 @@ function get_num_variables(num_variables) {
 
 function validate_dpp_form(num_variables) {
     var nv = get_num_variables(num_variables);
-    var a = parseFloat(document.forms["dpp_" + nv + "_form"]["concentration_param"].value);
+    var a = parseFloat(document.forms["dpp_" + nv +
+            "_form"]["concentration_param"].value);
     if (a == null || a == "" || a < 0.0 || a > 10000000.0) {
         alert("Concentration parameter must be between 0.0 and 10000000.0");
         return false;
@@ -180,6 +187,7 @@ function calc_dpp_prob(alpha, numerator1, numerator2, numerator3) {
     if(typeof(numerator3)==='undefined') {
         return ((numerator1/(alpha+1))*(numerator2/(alpha+2)));
     } else {
-        return ((numerator1/(alpha+1))*(numerator2/(alpha+2))*(numerator3/(alpha+3)));
+        return ((numerator1/(alpha+1))*(numerator2/(alpha+2))*
+                (numerator3/(alpha+3)));
     }
 }
