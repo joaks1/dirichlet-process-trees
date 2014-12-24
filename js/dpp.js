@@ -49,8 +49,8 @@ function create_dpp_form(num_variables, image_path, font_size_multiplier) {
     b.setAttribute("id", "update_" + nv + "_button");
     b.setAttribute("value", "Update");
     b.setAttribute("onclick", "update_dpp_tree(" + nv + 
-            ",\"" + image_path + "\"" +
-            ",\"" + font_size_multiplier + "\");");
+            ",'" + image_path + "'" +
+            "," + font_size_multiplier + ");");
     i = document.createElement("input");
     i.setAttribute("type", "text");
     i.setAttribute("name", "StackOverflow1370021");
