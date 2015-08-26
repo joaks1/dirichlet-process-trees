@@ -6,7 +6,7 @@ npixels=$(expr $npx \* $npx)
 tex_file="dpp-3-slides.tex"
 pdf_file=${tex_file/\.tex/\.pdf}
 final_pdf=${pdf_file/slides/gif-slides}
-gif_file="dpp-3-example.gif"
+gif_file="../images/dpp-3-example.gif"
 
 # compile slides
 if [ ! -e "$pdf_file" ]
