@@ -6,12 +6,43 @@
         <title>DPP example</title>
 
         <script src="../js/dpp.js" type="text/javascript"></script>
+        <style type="text/css">
+            body {
+                width: 100%;
+                margin-left: 0px;
+                margin-top: 0px;
+            }
+            footer {
+            	background-color: #efefef;
+                box-shadow: 0px 500px 0px 500px #efefef;
+                padding-left: 20px;
+                padding-top: 10px;
+                padding-bottom: 3em;
+                margin-top: 2em;
+                font-size: 10pt;
+            }
+            .title-wrapper {
+            	margin-bottom: 2em;
+                background-color: #efefef;
+                padding-top: 20px;
+                padding-bottom: 5px;
+                padding-left: 20px;
+            }
+            .dpp-form {
+                margin-left: 20px;
+                margin-top: 20px;
+            }
+            canvas {
+                margin-left: 20px;
+                padding: 20px;
+            }
+        </style>
         
     </head>
 
     <body>
-        <div id="div1">
-            <p>Testing 1, 2, 3 ...</p>
+        <div class="title-wrapper">
+            <h1>Dirichlet Process Demo</h1>
         </div>
 
         <script type="text/javascript">
@@ -19,5 +50,21 @@
             run_dpp_demo(0.7, 1.0, 4, "../images/dpp-4-example-blank-150.png");
         </script>
     </body>
+
+    <footer>
+        <div class="footer-wrap">
+            <p>
+            Written by <a href="http://phyletica.github.io">Jamie Oaks</a>
+            <br />
+            Source code available on <a href="https://github.com/joaks1/dirichlet-process-trees">GitHub</a>.
+            <br />
+            <span>
+                <a rel="license" href="http://creativecommons.org/publicdomain/zero/1.0/"><img alt="CC0" style="border-style: none" src="https://i.creativecommons.org/p/zero/1.0/88x31.png" /></a>
+                <br />
+                Content is licensed under a <a rel="license" href="http://creativecommons.org/publicdomain/zero/1.0/">Creative Commons Zero 1.0 Universal License</a>.
+            </span>
+            </p>
+        </div>
+    </footer>
 
 </html>
