@@ -1,0 +1,217 @@
+\documentclass[table]{beamer}
+\usepackage{beamerthemesplit}
+\usetheme{boxes}
+\usecolortheme{seahorse}
+\usepackage{xcolor}
+\usepackage{ifthen}
+\usepackage{pgf}
+% \usepackage[fleqn]{amsmath}
+\usepackage{changepage}
+\usepackage{hyperref}
+\hypersetup{pdfborder={0 0 0}, colorlinks=true, urlcolor=blue, linkcolor=blue, citecolor=blue}
+\usepackage{caption}
+\captionsetup[figure]{font=scriptsize, labelformat=empty, textformat=simple, justification=centering, skip=2pt}
+\usepackage{tikz}
+\usetikzlibrary{trees,calc,backgrounds}
+
+% remove navigation bar
+\beamertemplatenavigationsymbolsempty
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% The `conc` macro is the concentration parameter of the Dirichlet process.
+% Set it to the desired value here. Delete (or comment out) the `conc` macro to
+% leave probability values blank.
+\pgfmathsetmacro\conc{0.1}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\pclass}[3]{%
+    \ifthenelse{\equal{#1}{}}%
+        {}%
+        {\fcolorbox{blue!90}{blue!15}{\catformat{#1}}}%
+    \ifthenelse{\equal{#2}{}}%
+        {}%
+        {\fcolorbox{red!90}{red!15}{\catformat{#2}}}%
+    \ifthenelse{\equal{#3}{}}%
+        {}%
+        {\fcolorbox{gray!90}{gray!15}{\catformat{#3}}}%
+}
+\newcommand{\catformat}[1]{\textsf{\textbf{#1}}}
+\newcommand{\pcat}[3]{%
+    \textcolor{blue}{\catformat{#1}}%
+    \textcolor{red}{\catformat{#2}}%
+    \textcolor{black}{\catformat{#3}}%
+}
+\newcommand{\branchlabel}[1]{\normalsize #1}
+\newcommand{\branchlabelvalue}[1]{\scriptsize #1}
+\newcommand{\tiplabel}[1]{\normalsize #1}
+
+\newcommand{\calcprob}[2]{%
+    \ifthenelse{\isundefined{\conc}}%
+        {}%
+        {\pgfmathparse{(#1/(\conc+1))*(#2/(\conc+2))}\pgfmathprintnumber{\pgfmathresult}}%
+}
+
+\newcommand{\calcbranchprob}[2]{%
+    \ifthenelse{\isundefined{\conc}}%
+        {}%
+        {\pgfmathparse{(#1/(\conc+#2))}\pgfmathprintnumber{\pgfmathresult}}%
+}
+
+\newcommand{\getconc}[1]{%
+    \ifthenelse{\isundefined{\conc}}%
+        {}%
+        {\conc}%
+}
+
+% \tikzset{hide on/.code={\only<#1>{\color{fg!20}}}}
+\tikzset{hide on/.code={\only<#1>{\color{white}}}}
+\tikzset{
+    invisible/.style={opacity=0},
+    visible on/.style={alt={#1{}{invisible}}},
+    alt/.code args={<#1>#2#3}{%
+        \alt<#1>{\pgfkeysalso{#2}}{\pgfkeysalso{#3}}
+        % \pgfkeysalso doesn't change the path
+    },
+}
+
+
+\begin{document}
+
+\begin{frame}[plain,label=dpp]
+\setbeamercovered{invisible}
+\begin{adjustwidth}{-2.3em}{-2.5em}
+
+% Set the overall layout of the tree
+\tikzstyle{level 1}=[level distance=8em, sibling distance=13em]
+\tikzstyle{level 2}=[level distance=11em, sibling distance=5em]
+
+% Define styles
+\tikzstyle{root} = []
+\tikzstyle{internal} = []
+\tikzstyle{tip} = [text width = 3.5em]
+\tikzstyle{branch} = [->, very thick]
+
+\begin{center}
+    {\LARGE $\boldsymbol{\alpha =} \mathbf{\getconc{}}$} \\
+\end{center}
+
+\vspace{1mm}
+\noindent
+\begin{tikzpicture}[grow=right]%, sloped]
+\pgfkeys{/pgf/number format/.cd,fixed,fixed zerofill,precision=3}
+\node[root] {\pclass{A}{}{}}
+    child [visible on=<4->] {
+        node[internal] {\pclass{A}{B}{}}        
+            child [visible on=<14->] {
+                node[tip, label=right:
+                    {\tiplabel{\uncover<16->{
+                        $
+                        % p(m = 123)=
+                        \left(\frac{\alpha}{\alpha+1}\right)\left(\frac{\alpha}{\alpha+2}\right)
+                        = \calcprob{\conc}{\conc}$
+                        }}}]
+                    {\pclass{A}{B}{C}}
+                edge from parent [style = branch]
+                node[below,
+                    label={[label distance = -2.7em, visible on=<15->]
+                        \branchlabel{$\frac{\alpha}{\alpha+2}=$}
+                        \branchlabelvalue{$\calcbranchprob{\conc}{2}$}}
+                    ] {}
+            }
+            child [visible on=<12->] {
+                node[tip, label=right:
+                    {\tiplabel{\uncover<16->{
+                        $
+                        % p(m = 121)=
+                        \left(\frac{\alpha}{\alpha+1}\right)\left(\frac{1}{\alpha+2}\right)
+                        = \calcprob{\conc}{1}$
+                        }}}]
+                    {\pclass{AC}{B}{}}
+                edge from parent [style = branch]
+                node[above,
+                    label={[label distance = -1em, visible on=<13->]
+                        \branchlabel{$\frac{1}{\alpha+2}=$}
+                        \branchlabelvalue{$\calcbranchprob{1}{2}$}}
+                    ] {}
+            }
+            child [visible on=<10->] {
+                node[tip, label=right:
+                    {\tiplabel{\uncover<16->{
+                        $
+                        % p(m = 122)=
+                        \left(\frac{\alpha}{\alpha+1}\right)\left(\frac{1}{\alpha+2}\right)
+                        = \calcprob{\conc}{1}$
+                         }}}]
+                     {\pclass{A}{BC}{}}
+                edge from parent [style = branch]
+                node[above,
+                    label={[label distance = -0.3em, visible on=<11->]
+                        \branchlabel{$\frac{1}{\alpha+2}=$}
+                        \branchlabelvalue{$\calcbranchprob{1}{2}$}}
+                    ] {}
+            }
+            edge from parent [style = branch]
+            node[below,
+                label={[xshift = -1.5em, yshift = -2.5em, visible on=<5->]
+                    \branchlabel{$\frac{\alpha}{\alpha+1}=$}
+                    \branchlabelvalue{$\calcbranchprob{\conc}{1}$}}
+                ] {}
+    }
+    child [visible on=<2->] {
+        node[internal] {\pclass{AB}{}{}}        
+            child [visible on=<8->] {
+                node[tip, label=right:
+                    {\tiplabel{\uncover<16->{
+                        $
+                        % p(m = 112)=
+                        \left(\frac{1}{\alpha+1}\right)\left(\frac{\alpha}{\alpha+2}\right)
+                        = \calcprob{1}{\conc}$
+                         }}}]
+                    {\pclass{AB}{C}{}}
+                edge from parent [style = branch]
+                node[below,
+                    label={[label distance = -2.2em, visible on=<9->]
+                        \branchlabel{$\frac{\alpha}{\alpha+2}=$}
+                        \branchlabelvalue{$\calcbranchprob{\conc}{2}$}}
+                    ] {}
+            }
+            child [visible on=<6->] {
+                node[tip, label=right:
+                    {\tiplabel{\uncover<16->{
+                        $
+                        % p(m = 111)=
+                        \left(\frac{1}{\alpha+1}\right)\left(\frac{2}{\alpha+2}\right)
+                        = \calcprob{1}{2}$
+                         }}}]
+                    {\pclass{ABC}{}{}}
+                edge from parent [style = branch]
+                node[above,
+                    label={[label distance = -0.8em, visible on=<7->]
+                        \branchlabel{$\frac{2}{\alpha+2}=$}
+                        \branchlabelvalue{$\calcbranchprob{2}{2}$}}
+                    ] {}
+            }
+            edge from parent [style = branch]
+            node[above,
+                label={[xshift = -1.5em, yshift = -0.5em, visible on=<3->]
+                    \branchlabel{$\frac{1}{\alpha+1}=$}
+                    \branchlabelvalue{$\calcbranchprob{1}{1}$}}
+                ] {}
+    };
+\end{tikzpicture}
+
+\end{adjustwidth}
+\end{frame}
+
+\againframe<1->{dpp}
+
+\pgfmathsetmacro\conc{1.5}
+
+\againframe<16>{dpp}
+
+\pgfmathsetmacro\conc{50.0}
+
+\againframe<16>{dpp}
+
+\end{document}
