@@ -27,6 +27,7 @@ function create_dpp_form(num_variables, image_path, font_size_multiplier) {
     var nv = get_num_variables(num_variables);
     var dpp_div = document.createElement("div");
     dpp_div.setAttribute("name", "dpp_" + nv + "_div");
+    dpp_div.setAttribute("class", "dpp-form");
     document.getElementsByTagName("body")[0].appendChild(dpp_div);
 
     dpp_form = document.createElement("form");
