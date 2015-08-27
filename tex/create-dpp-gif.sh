@@ -7,6 +7,8 @@ tex_file="dpp-3-slides.tex"
 pdf_file=${tex_file/\.tex/\.pdf}
 final_pdf=${pdf_file/slides/gif-slides}
 gif_file="../images/dpp-3-example.gif"
+mp4_file="${gif_file/\.gif/\.mp4}"
+ogg_file="${gif_file/\.gif/\.ogg}"
 
 # compile slides
 if [ ! -e "$pdf_file" ]
@@ -37,3 +39,23 @@ then
 else
     echo file "$gif_file" already exists... Skipping conversion!
 fi
+
+# convert gif into mp4 and ogg
+if [ -e "$gif_file" ]
+then
+    if [ ! -e "$mp4_file" ]
+    then
+        ffmpeg -f gif -i "$gif_file" "$mp4_file" 
+    else
+        file "$mp4_file" already exists... Skipping conversion! 
+    fi
+    if [ ! -e "$ogg_file" ]
+    then
+        ffmpeg -f gif -i "$gif_file" "$ogg_file" 
+    else
+        file "$ogg_file" already exists... Skipping conversion! 
+    fi
+else
+    file "$gif_file" does not exist... Skipping video conversions!
+fi
+
