@@ -3,17 +3,19 @@
 npx="1024"
 npixels=$(expr $npx \* $npx)
 
-tex_file="dpp-3-slides.tex"
-pdf_file=${tex_file/\.tex/\.pdf}
-final_pdf=${pdf_file/slides/gif-slides}
-gif_file="../images/dpp-3-example.gif"
+
+for file_prefix in "dpp-3" "pyp-3"; do
+tex_file="${file_prefix}-slides.tex"
+pdf_file="${file_prefix}-slides.pdf"
+final_pdf="${file_prefix}-gif-slides.pdf"
+gif_file="../images/${file_prefix}-example.gif"
 mp4_file="${gif_file/\.gif/\.mp4}"
 ogg_file="${gif_file/\.gif/\.ogg}"
 
 # compile slides
 if [ ! -e "$pdf_file" ]
 then
-    latexmk -pdf dpp-3-slides.tex
+    latexmk -pdf "$tex_file"
 else
     echo file "$pdf_file" already exists... Skipping tex compile!
 fi
@@ -47,15 +49,16 @@ then
     then
         ffmpeg -f gif -i "$gif_file" "$mp4_file" 
     else
-        file "$mp4_file" already exists... Skipping conversion! 
+        echo file "$mp4_file" already exists... Skipping conversion! 
     fi
     if [ ! -e "$ogg_file" ]
     then
         ffmpeg -f gif -i "$gif_file" "$ogg_file" 
     else
-        file "$ogg_file" already exists... Skipping conversion! 
+        echo file "$ogg_file" already exists... Skipping conversion! 
     fi
 else
-    file "$gif_file" does not exist... Skipping video conversions!
+    echo file "$gif_file" does not exist... Skipping video conversions!
 fi
 
+done
