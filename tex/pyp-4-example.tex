@@ -1,0 +1,375 @@
+\documentclass[11pt]{article}
+\usepackage[%
+  % papersize={12.8cm,9.6cm},
+  papersize={23cm,23.5cm},
+  hmargin=0cm,%
+  vmargin=0.5mm,%
+  head=0.5cm,% might be changed later
+  headsep=0pt,%
+  foot=0.5cm% might be changed later
+  ]{geometry}% http://ctan.org/pkg/geometry
+\usepackage{xcolor}
+\usepackage{ifthen}
+\usepackage{pgf}
+\usepackage[fleqn]{amsmath}
+\usepackage{hyperref}
+\hypersetup{pdfborder={0 0 0}, colorlinks=true, urlcolor=blue, linkcolor=blue, citecolor=blue}
+\usepackage{caption}
+\captionsetup[figure]{font=scriptsize, labelformat=empty, textformat=simple, justification=centering, skip=2pt}
+\usepackage{tikz}
+\usetikzlibrary{trees,calc,backgrounds}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% The `conc` macro is the concentration parameter of the Dirichlet process.
+% Set it to the desired value here. Delete (or comment out) the `conc` macro to
+% leave probability values blank.
+\pgfmathsetmacro\conc{1.5}
+\pgfmathsetmacro\disc{0.5}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\concentration}{\ensuremath{\alpha}}
+\newcommand{\discount}{\ensuremath{d}}
+
+\newcommand{\pclass}[4]{%
+    \ifthenelse{\equal{#1}{}}%
+        {}%
+        {\fcolorbox{blue!90}{blue!15}{\catformat{#1}}}%
+    \ifthenelse{\equal{#2}{}}%
+        {}%
+        {\fcolorbox{red!90}{red!15}{\catformat{#2}}}%
+    \ifthenelse{\equal{#3}{}}%
+        {}%
+        {\fcolorbox{gray!90}{gray!15}{\catformat{#3}}}%
+    \ifthenelse{\equal{#4}{}}%
+        {}%
+        {\fcolorbox{orange!90}{orange!15}{\catformat{#4}}}%
+}
+\newcommand{\catformat}[1]{\textsf{\textbf{#1}}}
+\newcommand{\pcat}[4]{%
+    \textcolor{blue}{\catformat{#1}}%
+    \textcolor{red}{\catformat{#2}}%
+    \textcolor{black}{\catformat{#3}}%
+    \textcolor{yellow}{\catformat{#4}}%
+}
+\newcommand{\branchlabel}[1]{\normalsize #1}
+\newcommand{\tiplabel}[1]{\normalsize #1}
+
+\newcommand{\calcprob}[3]{%
+    \ifthenelse{\isundefined{\conc}}%
+        {}%
+        {\pgfmathparse{(#1/(\conc+1))*(#2/(\conc+2))*(#3/(\conc+3))}\pgfmathprintnumber{\pgfmathresult}}%
+}
+
+\newcommand{\getconc}[1]{%
+    \ifthenelse{\isundefined{\conc}}%
+        {}%
+        {\conc}%
+}
+\newcommand{\getdisc}[1]{%
+    \ifthenelse{\isundefined{\disc}}%
+        {}%
+        {\disc}%
+}
+
+
+\begin{document}
+
+% Set the overall layout of the tree
+\tikzstyle{level 1}=[level distance=12em, sibling distance=33em]
+\tikzstyle{level 2}=[level distance=14em, sibling distance=14em]
+\tikzstyle{level 3}=[level distance=14em, sibling distance=4em]
+
+% Define styles
+\tikzstyle{root} = []
+\tikzstyle{internal} = []
+\tikzstyle{tip} = [text width = 4.8em]
+\tikzstyle{branch} = [->, very thick]
+
+\begin{center}
+    {\LARGE $\boldsymbol{\concentration =} \mathbf{\getconc{}}
+        \hspace{10em}
+        \boldsymbol{\discount =} \mathbf{\getdisc{}}$} \\
+\end{center}
+
+\noindent
+\begin{tikzpicture}[grow=right]%, sloped]
+\pgfkeys{/pgf/number format/.cd,fixed,fixed zerofill,precision=3}
+% \pgfkeys{/pgf/number format/.cd,std,fixed zerofill,precision=3}
+\node[root] {\pclass{A}{}{}{}}
+    child {
+        node[internal, yshift=2em] {\pclass{A}{B}{}{}}        
+            child {
+                node[internal] {\pclass{A}{B}{C}{}}
+                    child {
+                        node[tip, label=right:
+                            {\tiplabel{
+                                $
+                                \left(\frac{\concentration+\discount}{\concentration+1}\right)
+                                \left(\frac{\concentration+2\discount}{\concentration+2}\right)
+                                \left(\frac{\concentration+3\discount}{\concentration+3}\right)
+                                = \calcprob{(\conc+\disc)}{(\conc+(2*\disc))}{(\conc+(3*\disc))}$
+                                }}]
+                            {\pclass{A}{B}{C}{D}}
+                        edge from parent [style = branch]
+                        node[above,
+                            label={\branchlabel{$\frac{\concentration+3\discount}{\concentration+3}$}}
+                            ] {}
+                    }
+                    child {
+                        node[tip, label=right:
+                            {\tiplabel{
+                                $
+                                \left(\frac{\concentration+\discount}{\concentration+1}\right)
+                                \left(\frac{\concentration+2\discount}{\concentration+2}\right)
+                                \left(\frac{1-\discount}{\concentration+3}\right)
+                                = \calcprob{(\conc+\disc)}{(\conc+(2*\disc))}{(1-\disc)}$
+                                }}]
+                            {\pclass{A}{B}{CD}{}}
+                        edge from parent [style = branch]
+                        node[above,
+                            label={\branchlabel{$\frac{1-\discount}{\concentration+3}$}}
+                            ] {}
+                    }
+                    child {
+                        node[tip, label=right:
+                            {\tiplabel{
+                                $
+                                \left(\frac{\concentration+\discount}{\concentration+1}\right)
+                                \left(\frac{\concentration+2\discount}{\concentration+2}\right)
+                                \left(\frac{1-\discount}{\concentration+3}\right)
+                                = \calcprob{(\conc+\disc)}{(\conc+(2*\disc))}{(1-\disc)}$
+                                }}]
+                            {\pclass{A}{BD}{C}{}}
+                        edge from parent [style = branch]
+                        node[above,
+                            label={\branchlabel{$\frac{1-\discount}{\concentration+3}$}}
+                            ] {}
+                    }
+                    child {
+                        node[tip, label=right:
+                            {\tiplabel{
+                                $
+                                \left(\frac{\concentration+\discount}{\concentration+1}\right)
+                                \left(\frac{\concentration+2\discount}{\concentration+2}\right)
+                                \left(\frac{1-\discount}{\concentration+3}\right)
+                                = \calcprob{(\conc+\disc)}{(\conc+(2*\disc))}{(1-\disc)}$
+                                }}]
+                            {\pclass{AD}{B}{C}{}}
+                        edge from parent [style = branch]
+                        node[above,
+                            label={\branchlabel{$\frac{1-\discount}{\concentration+3}$}}
+                            ] {}
+                    }
+                edge from parent [style = branch]
+                node[above,
+                    label={[yshift = 1em]\branchlabel{$\frac{\concentration+2\discount}{\concentration+2}$}}
+                    ] {}
+            }
+            child {
+                node[internal] {\pclass{AC}{B}{}{}}
+                    child {
+                        node[tip, label=right:
+                            {\tiplabel{
+                                $
+                                \left(\frac{\concentration+\discount}{\concentration+1}\right)
+                                \left(\frac{1-\discount}{\concentration+2}\right)
+                                \left(\frac{\concentration+2\discount}{\concentration+3}\right)
+                                = \calcprob{(\conc+\disc)}{(1-\disc)}{(\conc+(2*\disc))}$
+                                }}]
+                            {\pclass{AC}{B}{D}{}}
+                        edge from parent [style = branch]
+                        node[above,
+                            label={\branchlabel{$\frac{\concentration+2\discount}{\concentration+3}$}}
+                            ] {}
+                    }
+                    child {
+                        node[tip, label=right:
+                            {\tiplabel{
+                                $
+                                \left(\frac{\concentration+\discount}{\concentration+1}\right)
+                                \left(\frac{1-\discount}{\concentration+2}\right)
+                                \left(\frac{1-\discount}{\concentration+3}\right)
+                                = \calcprob{(\conc+\disc)}{(1-\disc)}{(1-\disc)}$
+                                }}]
+                            {\pclass{AC}{BD}{}{}}
+                        edge from parent [style = branch]
+                        node[above,
+                            label={\branchlabel{$\frac{1-\discount}{\concentration+3}$}}
+                            ] {}
+                    }
+                    child {
+                        node[tip, label=right:
+                            {\tiplabel{
+                                $
+                                \left(\frac{\concentration+\discount}{\concentration+1}\right)
+                                \left(\frac{1-\discount}{\concentration+2}\right)
+                                \left(\frac{2-\discount}{\concentration+3}\right)
+                                = \calcprob{(\conc+\disc)}{(1-\disc)}{(2-\disc)}$
+                                }}]
+                            {\pclass{ACD}{B}{}{}}
+                        edge from parent [style = branch]
+                        node[above,
+                            label={\branchlabel{$\frac{2-\discount}{\concentration+3}$}}
+                            ] {}
+                    }
+                edge from parent [style = branch]
+                node[above,
+                    label={\branchlabel{$\frac{1-\discount}{\concentration+2}$}}
+                    ] {}
+            }
+            child {
+                node[internal, yshift=-2em] {\pclass{A}{BC}{}{}}
+                    child {
+                        node[tip, label=right:
+                            {\tiplabel{
+                                $
+                                \left(\frac{\concentration+\discount}{\concentration+1}\right)
+                                \left(\frac{1-\discount}{\concentration+2}\right)
+                                \left(\frac{\concentration+2\discount}{\concentration+3}\right)
+                                = \calcprob{(\conc+\disc)}{(1-\disc)}{(\conc-(2*\disc))}$
+                                }}]
+                            {\pclass{A}{BC}{D}{}}
+                        edge from parent [style = branch]
+                        node[above,
+                            label={\branchlabel{$\frac{\concentration+2\discount}{\concentration+3}$}}
+                            ] {}
+                    }
+                    child {
+                        node[tip, label=right:
+                            {\tiplabel{
+                                $
+                                \left(\frac{\concentration+\discount}{\concentration+1}\right)
+                                \left(\frac{1-\discount}{\concentration+2}\right)
+                                \left(\frac{2-\discount}{\concentration+3}\right)
+                                = \calcprob{(\conc+\disc)}{(1-\disc)}{(2-\disc)}$
+                                }}]
+                            {\pclass{A}{BCD}{}{}}
+                        edge from parent [style = branch]
+                        node[above,
+                            label={\branchlabel{$\frac{2-\discount}{\concentration+3}$}}
+                            ] {}
+                    }
+                    child {
+                        node[tip, label=right:
+                            {\tiplabel{
+                                $
+                                \left(\frac{\concentration+\discount}{\concentration+1}\right)
+                                \left(\frac{1-\discount}{\concentration+2}\right)
+                                \left(\frac{1-\discount}{\concentration+3}\right)
+                                = \calcprob{(\conc+\disc)}{(1-\disc)}{(1-\disc)}$
+                                }}]
+                            {\pclass{AD}{BC}{}{}}
+                        edge from parent [style = branch]
+                        node[above,
+                            label={\branchlabel{$\frac{1-\discount}{\concentration+3}$}}
+                            ] {}
+                    }
+                edge from parent [style = branch]
+                node[above,
+                    label={[yshift = 0.5em]\branchlabel{$\frac{1-\discount}{\concentration+2}$}}
+                    ] {}
+            }
+            edge from parent [style = branch]
+            node[above,
+                label={[yshift = 1em]\branchlabel{$\frac{\concentration+\discount}{\concentration+1}$}}
+                ] {}
+    }
+    child {
+        node[internal, yshift=-2em] {\pclass{AB}{}{}{}}        
+            child {
+                node[internal, yshift=2em] {\pclass{AB}{C}{}{}}
+                    child {
+                        node[tip, label=right:
+                            {\tiplabel{
+                                $
+                                \left(\frac{1-\discount}{\concentration+1}\right)
+                                \left(\frac{\concentration+\discount}{\concentration+2}\right)
+                                \left(\frac{\concentration+2\discount}{\concentration+3}\right)
+                                = \calcprob{(1-\disc)}{(\conc+\disc)}{(\conc+(2*\disc))}$
+                                }}]
+                            {\pclass{AB}{C}{D}{}}
+                        edge from parent [style = branch]
+                        node[above,
+                            label={\branchlabel{$\frac{\concentration+2\discount}{\concentration+3}$}}
+                            ] {}
+                    }
+                    child {
+                        node[tip, label=right:
+                            {\tiplabel{
+                                $
+                                \left(\frac{1-\discount}{\concentration+1}\right)
+                                \left(\frac{\concentration+\discount}{\concentration+2}\right)
+                                \left(\frac{1-\discount}{\concentration+3}\right)
+                                = \calcprob{(1-\disc)}{(\conc+\disc)}{(1-\disc))}$
+                                }}]
+                            {\pclass{AB}{CD}{}{}}
+                        edge from parent [style = branch]
+                        node[above,
+                            label={\branchlabel{$\frac{1-\discount}{\concentration+3}$}}
+                            ] {}
+                    }
+                    child {
+                        node[tip, label=right:
+                            {\tiplabel{
+                                $
+                                \left(\frac{1-\discount}{\concentration+1}\right)
+                                \left(\frac{\concentration+\discount}{\concentration+2}\right)
+                                \left(\frac{2-\discount}{\concentration+3}\right)
+                                = \calcprob{(1-\disc)}{(\conc+\disc)}{(2-\disc))}$
+                                }}]
+                            {\pclass{ABD}{C}{}{}}
+                        edge from parent [style = branch]
+                        node[above,
+                            label={\branchlabel{$\frac{2-\discount}{\concentration+3}$}}
+                            ] {}
+                    }
+                edge from parent [style = branch]
+                node[above,
+                    label={\branchlabel{$\frac{\concentration+\discount}{\concentration+2}$}}
+                    ] {}
+            }
+            child {
+                node[internal, yshift=-2em] {\pclass{ABC}{}{}{}}
+                    child {
+                        node[tip, label=right:
+                            {\tiplabel{
+                                $
+                                \left(\frac{1-\discount}{\concentration+1}\right)
+                                \left(\frac{2-\discount}{\concentration+2}\right)
+                                \left(\frac{\concentration+\discount}{\concentration+3}\right)
+                                = \calcprob{(1-\disc)}{(2-\disc)}{(\conc+\disc)}$
+                                }}]
+                            {\pclass{ABC}{D}{}{}}
+                        edge from parent [style = branch]
+                        node[above,
+                            label={\branchlabel{$\frac{\concentration+\discount}{\concentration+3}$}}
+                            ] {}
+                    }
+                    child {
+                        node[tip, label=right:
+                            {\tiplabel{
+                                $
+                                \left(\frac{1-\discount}{\concentration+1}\right)
+                                \left(\frac{2-\discount}{\concentration+2}\right)
+                                \left(\frac{3-\discount}{\concentration+3}\right)
+                                = \calcprob{(1-\disc)}{(2-\disc)}{(3-\disc)}$
+                                }}]
+                            {\pclass{ABCD}{}{}{}}
+                        edge from parent [style = branch]
+                        node[above,
+                            label={\branchlabel{$\frac{3-\discount}{\concentration+3}$}}
+                            ] {}
+                    }
+                edge from parent [style = branch]
+                node[above,
+                    label={\branchlabel{$\frac{2-\discount}{\concentration+2}$}}
+                    ] {}
+            }
+            edge from parent [style = branch]
+            node[above,
+                label={[yshift = 1em]\branchlabel{$\frac{1-\discount}{\concentration+1}$}}
+                ] {}
+    };
+\end{tikzpicture}
+
+\end{document}
