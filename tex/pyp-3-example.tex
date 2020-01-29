@@ -13,8 +13,6 @@
 \usepackage[fleqn]{amsmath}
 \usepackage{hyperref}
 \hypersetup{pdfborder={0 0 0}, colorlinks=true, urlcolor=blue, linkcolor=blue, citecolor=blue}
-\usepackage{caption}
-\captionsetup[figure]{font=scriptsize, labelformat=empty, textformat=simple, justification=centering, skip=2pt}
 \usepackage{tikz}
 \usetikzlibrary{trees,calc,backgrounds}
 
@@ -22,8 +20,8 @@
 % The `conc` macro is the concentration parameter of the Dirichlet process.
 % Set it to the desired value here. Delete (or comment out) the `conc` macro to
 % leave probability values blank.
-\pgfmathsetmacro\conc{1.5}
-\pgfmathsetmacro\disc{0.5}
+% \pgfmathsetmacro\conc{1.5}
+% \pgfmathsetmacro\disc{0.5}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newcommand{\concentration}{\ensuremath{\alpha}}
@@ -85,6 +83,7 @@
         \boldsymbol{\discount =} \mathbf{\getdisc{}}$} \\
 \end{center}
 
+\vspace{-1ex}
 \noindent
 \begin{tikzpicture}[grow=right]%, sloped]
 \pgfkeys{/pgf/number format/.cd,fixed,fixed zerofill,precision=3}
@@ -102,9 +101,9 @@
                         }}]
                     {\pclass{A}{B}{C}}
                 edge from parent [style = branch]
-                node[above,
-                    label={[label distance = 0.2em]
-                        \branchlabel{$\frac{\concentration+2\discount}{\concentration+2}=$}}
+                node[above, yshift = -0.6em,
+                    label={
+                        \branchlabel{$\frac{\concentration+2\discount}{\concentration+2}$}}
                     ] {}
             }
             child {
@@ -117,8 +116,8 @@
                         }}]
                     {\pclass{AC}{B}{}}
                 edge from parent [style = branch]
-                node[above,
-                    label={\branchlabel{$\frac{1-\discount}{\concentration+2}=$}}
+                node[above, yshift = -0.6em,
+                    label={\branchlabel{$\frac{1-\discount}{\concentration+2}$}}
                     ] {}
             }
             child {
@@ -131,15 +130,15 @@
                          }}]
                      {\pclass{A}{BC}{}}
                 edge from parent [style = branch]
-                node[above,
-                    label={[label distance = 0.2em]
-                        \branchlabel{$\frac{1-\discount}{\concentration+2}=$}}
+                node[above, yshift = -0.6em,
+                    label={
+                        \branchlabel{$\frac{1-\discount}{\concentration+2}$}}
                     ] {}
             }
             edge from parent [style = branch]
-            node[above,
-                label={[label distance = 0.5em]
-                    \branchlabel{$\frac{\concentration+\discount}{\concentration+1}=$}}
+            node[above, yshift = -0.3em,
+                label={
+                    \branchlabel{$\frac{\concentration+\discount}{\concentration+1}$}}
                 ] {}
     }
     child {
@@ -154,8 +153,8 @@
                         }}]
                     {\pclass{AB}{C}{}}
                 edge from parent [style = branch]
-                node[above,
-                    label={\branchlabel{$\frac{\concentration+\discount}{\concentration+2}=$}}
+                node[above, yshift = -0.6em,
+                    label={\branchlabel{$\frac{\concentration+\discount}{\concentration+2}$}}
                     ] {}
             }
             child {
@@ -168,14 +167,14 @@
                         }}]
                     {\pclass{ABC}{}{}}
                 edge from parent [style = branch]
-                node[above,
-                    label={\branchlabel{$\frac{2-\discount}{\concentration+2}=$}}
+                node[above, yshift = -0.6em,
+                    label={\branchlabel{$\frac{2-\discount}{\concentration+2}$}}
                     ] {}
             }
             edge from parent [style = branch]
-            node[above,
-                label={[label distance = 0.5em]
-                    \branchlabel{$\frac{1-\discount}{\concentration+1}=$}}
+            node[above, yshift = -0.3em,
+                label={
+                    \branchlabel{$\frac{1-\discount}{\concentration+1}$}}
                 ] {}
     };
 \end{tikzpicture}

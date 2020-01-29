@@ -23,8 +23,8 @@
 % The `conc` macro is the concentration parameter of the Dirichlet process.
 % Set it to the desired value here. Delete (or comment out) the `conc` macro to
 % leave probability values blank.
-\pgfmathsetmacro\conc{1.5}
-\pgfmathsetmacro\disc{0.5}
+% \pgfmathsetmacro\conc{1.5}
+% \pgfmathsetmacro\disc{0.5}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newcommand{\concentration}{\ensuremath{\alpha}}
@@ -111,7 +111,7 @@
                                 }}]
                             {\pclass{A}{B}{C}{D}}
                         edge from parent [style = branch]
-                        node[above,
+                        node[above, yshift = -0.8em,
                             label={\branchlabel{$\frac{\concentration+3\discount}{\concentration+3}$}}
                             ] {}
                     }
@@ -126,7 +126,7 @@
                                 }}]
                             {\pclass{A}{B}{CD}{}}
                         edge from parent [style = branch]
-                        node[above,
+                        node[above, yshift = -0.8em,
                             label={\branchlabel{$\frac{1-\discount}{\concentration+3}$}}
                             ] {}
                     }
@@ -141,7 +141,7 @@
                                 }}]
                             {\pclass{A}{BD}{C}{}}
                         edge from parent [style = branch]
-                        node[above,
+                        node[above, yshift = -0.9em,
                             label={\branchlabel{$\frac{1-\discount}{\concentration+3}$}}
                             ] {}
                     }
@@ -156,13 +156,13 @@
                                 }}]
                             {\pclass{AD}{B}{C}{}}
                         edge from parent [style = branch]
-                        node[above,
+                        node[above, yshift = -0.8em,
                             label={\branchlabel{$\frac{1-\discount}{\concentration+3}$}}
                             ] {}
                     }
                 edge from parent [style = branch]
-                node[above,
-                    label={[yshift = 1em]\branchlabel{$\frac{\concentration+2\discount}{\concentration+2}$}}
+                node[above, yshift = -0.4em,
+                    label={\branchlabel{$\frac{\concentration+2\discount}{\concentration+2}$}}
                     ] {}
             }
             child {
@@ -178,7 +178,7 @@
                                 }}]
                             {\pclass{AC}{B}{D}{}}
                         edge from parent [style = branch]
-                        node[above,
+                        node[above, yshift = -0.8em,
                             label={\branchlabel{$\frac{\concentration+2\discount}{\concentration+3}$}}
                             ] {}
                     }
@@ -193,7 +193,7 @@
                                 }}]
                             {\pclass{AC}{BD}{}{}}
                         edge from parent [style = branch]
-                        node[above,
+                        node[above, yshift = -0.9em,
                             label={\branchlabel{$\frac{1-\discount}{\concentration+3}$}}
                             ] {}
                     }
@@ -208,12 +208,12 @@
                                 }}]
                             {\pclass{ACD}{B}{}{}}
                         edge from parent [style = branch]
-                        node[above,
+                        node[above, yshift = -0.8em,
                             label={\branchlabel{$\frac{2-\discount}{\concentration+3}$}}
                             ] {}
                     }
                 edge from parent [style = branch]
-                node[above,
+                node[above, yshift = -0.4em,
                     label={\branchlabel{$\frac{1-\discount}{\concentration+2}$}}
                     ] {}
             }
@@ -230,7 +230,7 @@
                                 }}]
                             {\pclass{A}{BC}{D}{}}
                         edge from parent [style = branch]
-                        node[above,
+                        node[above, yshift = -0.8em,
                             label={\branchlabel{$\frac{\concentration+2\discount}{\concentration+3}$}}
                             ] {}
                     }
@@ -245,7 +245,7 @@
                                 }}]
                             {\pclass{A}{BCD}{}{}}
                         edge from parent [style = branch]
-                        node[above,
+                        node[above, yshift = -0.9em,
                             label={\branchlabel{$\frac{2-\discount}{\concentration+3}$}}
                             ] {}
                     }
@@ -260,18 +260,18 @@
                                 }}]
                             {\pclass{AD}{BC}{}{}}
                         edge from parent [style = branch]
-                        node[above,
+                        node[above, yshift = -0.8em,
                             label={\branchlabel{$\frac{1-\discount}{\concentration+3}$}}
                             ] {}
                     }
                 edge from parent [style = branch]
-                node[above,
-                    label={[yshift = 0.5em]\branchlabel{$\frac{1-\discount}{\concentration+2}$}}
+                node[above, yshift = -0.4em,
+                    label={\branchlabel{$\frac{1-\discount}{\concentration+2}$}}
                     ] {}
             }
             edge from parent [style = branch]
-            node[above,
-                label={[yshift = 1em]\branchlabel{$\frac{\concentration+\discount}{\concentration+1}$}}
+            node[above, yshift = -0.0em,
+                label={\branchlabel{$\frac{\concentration+\discount}{\concentration+1}$}}
                 ] {}
     }
     child {
@@ -289,7 +289,7 @@
                                 }}]
                             {\pclass{AB}{C}{D}{}}
                         edge from parent [style = branch]
-                        node[above,
+                        node[above, yshift = -0.8em,
                             label={\branchlabel{$\frac{\concentration+2\discount}{\concentration+3}$}}
                             ] {}
                     }
@@ -304,7 +304,7 @@
                                 }}]
                             {\pclass{AB}{CD}{}{}}
                         edge from parent [style = branch]
-                        node[above,
+                        node[above, yshift = -0.9em,
                             label={\branchlabel{$\frac{1-\discount}{\concentration+3}$}}
                             ] {}
                     }
@@ -319,12 +319,12 @@
                                 }}]
                             {\pclass{ABD}{C}{}{}}
                         edge from parent [style = branch]
-                        node[above,
+                        node[above, yshift = -0.8em,
                             label={\branchlabel{$\frac{2-\discount}{\concentration+3}$}}
                             ] {}
                     }
                 edge from parent [style = branch]
-                node[above,
+                node[above, yshift = -0.8em,
                     label={\branchlabel{$\frac{\concentration+\discount}{\concentration+2}$}}
                     ] {}
             }
@@ -341,7 +341,7 @@
                                 }}]
                             {\pclass{ABC}{D}{}{}}
                         edge from parent [style = branch]
-                        node[above,
+                        node[above, yshift = -0.8em,
                             label={\branchlabel{$\frac{\concentration+\discount}{\concentration+3}$}}
                             ] {}
                     }
@@ -356,18 +356,18 @@
                                 }}]
                             {\pclass{ABCD}{}{}{}}
                         edge from parent [style = branch]
-                        node[above,
+                        node[above, yshift = -0.8em,
                             label={\branchlabel{$\frac{3-\discount}{\concentration+3}$}}
                             ] {}
                     }
                 edge from parent [style = branch]
-                node[above,
+                node[above, yshift = -0.4em,
                     label={\branchlabel{$\frac{2-\discount}{\concentration+2}$}}
                     ] {}
             }
             edge from parent [style = branch]
-            node[above,
-                label={[yshift = 1em]\branchlabel{$\frac{1-\discount}{\concentration+1}$}}
+            node[above, yshift = -0.0em,
+                label={\branchlabel{$\frac{1-\discount}{\concentration+1}$}}
                 ] {}
     };
 \end{tikzpicture}
