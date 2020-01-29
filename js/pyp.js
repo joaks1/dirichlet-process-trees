@@ -55,8 +55,8 @@ function create_pyp_form(num_variables, image_path, font_size_multiplier) {
     d.setAttribute("name", "discount_param");
     d.setAttribute("id", "dparam");
     d.setAttribute("min", "0.0");
-    d.setAttribute("max", "0.99999");
-    d.setAttribute("step", "any");
+    d.setAttribute("max", "1.0");
+    d.setAttribute("step", "0.1");
     d.setAttribute("value", "0.5");
     d.setAttribute("onkeypress", "parse_key_press(event, " + nv + ");");
     b = document.createElement("input");
@@ -113,7 +113,7 @@ function validate_discount(num_variables) {
     var nv = get_num_variables(num_variables);
     var d = parseFloat(document.forms["pyp_" + nv +
             "_form"]["discount_param"].value);
-    if (d == null || d == "" || d < 0.0 || d >= 1.0) {
+    if ((d == null) || (d < 0.0) || (d >= 1.0)) {
         alert("Discount parameter must be between 0.0 and 1.0");
         return false;
     }
@@ -125,9 +125,9 @@ function update_pyp_tree(num_variables, image_path, font_size_multiplier) {
     var a = validate_concentration(nv);
     var d = validate_discount(nv);
     if (nv == 3) {
-        annotate_pyp_3_tree(a, image_path, font_size_multiplier);
+        annotate_pyp_3_tree(a, d, image_path, font_size_multiplier);
     } else {
-        annotate_pyp_4_tree(a, image_path, font_size_multiplier);
+        annotate_pyp_4_tree(a, d, image_path, font_size_multiplier);
     }
     return false;
 }
@@ -153,13 +153,14 @@ function annotate_pyp_3_tree(a, d, image_path, font_size_multiplier) {
     reset_pyp_canvas(canvas, context, image_path);
     context.font = 24*font_size_multiplier + "px Arial";
     context.textAlign="left";
-    context.fillText(a, 0.56*w, 0.045*h);
+    context.fillText(a, 0.37*w, 0.045*h);
+    context.fillText(d, 0.74*w, 0.045*h);
     context.font = 22*font_size_multiplier + "px Arial";
-    context.fillText(calc_pyp_prob(a, (1-d), (2-d)).toFixed(3), 0.905*w, 0.139*h);
-    context.fillText(calc_pyp_prob(a, (1-d), (a+d)).toFixed(3), 0.905*w, 0.339*h);
-    context.fillText(calc_pyp_prob(a, (a+d), (1-d)).toFixed(3), 0.905*w, 0.559*h);
-    context.fillText(calc_pyp_prob(a, (a+d), (1-d)).toFixed(3), 0.905*w, 0.759*h);
-    context.fillText(calc_pyp_prob(a, (a+d), (a+(2*d))).toFixed(3), 0.905*w, 0.959*h);
+    context.fillText(calc_pyp_prob(a, (1-d), (2-d)).toFixed(3), 0.915*w, 0.139*h);
+    context.fillText(calc_pyp_prob(a, (1-d), (a+d)).toFixed(3), 0.915*w, 0.339*h);
+    context.fillText(calc_pyp_prob(a, (a+d), (1-d)).toFixed(3), 0.915*w, 0.559*h);
+    context.fillText(calc_pyp_prob(a, (a+d), (1-d)).toFixed(3), 0.915*w, 0.759*h);
+    context.fillText(calc_pyp_prob(a, (a+d), (a+(2*d))).toFixed(3), 0.915*w, 0.959*h);
     return false;
 }
 
@@ -171,23 +172,24 @@ function annotate_pyp_4_tree(a, d, image_path, font_size_multiplier) {
     reset_pyp_canvas(canvas, context, image_path);
     context.font = 24*font_size_multiplier + "px Arial";
     context.textAlign="left";
-    context.fillText(a, 0.53*w, 0.02*h);
+    context.fillText(a, 0.38*w, 0.02*h);
+    context.fillText(d, 0.685*w, 0.02*h);
     context.font = 22*font_size_multiplier + "px Arial";
-    context.fillText(calc_pyp_prob(a, (1-d), (2-d), (3-d)).toFixed(3), 0.92*w, 0.067*h);
-    context.fillText(calc_pyp_prob(a, (1-d), (2-d), (a+d)).toFixed(3), 0.92*w, 0.133*h);
-    context.fillText(calc_pyp_prob(a, (1-d), (a+d), (2-d)).toFixed(3), 0.92*w, 0.198*h);
-    context.fillText(calc_pyp_prob(a, (1-d), (a+d), (1-d)).toFixed(3), 0.92*w, 0.263*h);
-    context.fillText(calc_pyp_prob(a, (1-d), (a+d), (a+(2*d))).toFixed(3), 0.92*w, 0.328*h);
-    context.fillText(calc_pyp_prob(a, (a+d), (1-d), (1-d)).toFixed(3), 0.92*w, 0.393*h);
-    context.fillText(calc_pyp_prob(a, (a+d), (1-d), (2-d)).toFixed(3), 0.92*w, 0.459*h);
-    context.fillText(calc_pyp_prob(a, (a+d), (1-d), (a+(2*d))).toFixed(3), 0.92*w, 0.524*h);
-    context.fillText(calc_pyp_prob(a, (a+d), (1-d), (2-d)).toFixed(3), 0.92*w, 0.590*h);
-    context.fillText(calc_pyp_prob(a, (a+d), (1-d), (1-d)).toFixed(3), 0.92*w, 0.655*h);
-    context.fillText(calc_pyp_prob(a, (a+d), (1-d), (a+(2*d))).toFixed(3), 0.92*w, 0.722*h);
-    context.fillText(calc_pyp_prob(a, (a+d), (a+(2*d)), (1-d)).toFixed(3), 0.92*w, 0.787*h);
-    context.fillText(calc_pyp_prob(a, (a+d), (a+(2*d)), (1-d)).toFixed(3), 0.92*w, 0.853*h);
-    context.fillText(calc_pyp_prob(a, (a+d), (a+(2*d)), (1-d)).toFixed(3), 0.92*w, 0.918*h);
-    context.fillText(calc_pyp_prob(a, (a+d), (a+(2*d)), (a+(3*d))).toFixed(3), 0.92*w, 0.983*h);
+    context.fillText(calc_pyp_prob(a, (1-d), (2-d), (3-d)).toFixed(3), 0.93*w, 0.067*h);
+    context.fillText(calc_pyp_prob(a, (1-d), (2-d), (a+d)).toFixed(3), 0.93*w, 0.133*h);
+    context.fillText(calc_pyp_prob(a, (1-d), (a+d), (2-d)).toFixed(3), 0.93*w, 0.198*h);
+    context.fillText(calc_pyp_prob(a, (1-d), (a+d), (1-d)).toFixed(3), 0.93*w, 0.263*h);
+    context.fillText(calc_pyp_prob(a, (1-d), (a+d), (a+(2*d))).toFixed(3), 0.93*w, 0.328*h);
+    context.fillText(calc_pyp_prob(a, (a+d), (1-d), (1-d)).toFixed(3), 0.93*w, 0.393*h);
+    context.fillText(calc_pyp_prob(a, (a+d), (1-d), (2-d)).toFixed(3), 0.93*w, 0.459*h);
+    context.fillText(calc_pyp_prob(a, (a+d), (1-d), (a+(2*d))).toFixed(3), 0.93*w, 0.524*h);
+    context.fillText(calc_pyp_prob(a, (a+d), (1-d), (2-d)).toFixed(3), 0.93*w, 0.590*h);
+    context.fillText(calc_pyp_prob(a, (a+d), (1-d), (1-d)).toFixed(3), 0.93*w, 0.655*h);
+    context.fillText(calc_pyp_prob(a, (a+d), (1-d), (a+(2*d))).toFixed(3), 0.93*w, 0.722*h);
+    context.fillText(calc_pyp_prob(a, (a+d), (a+(2*d)), (1-d)).toFixed(3), 0.93*w, 0.787*h);
+    context.fillText(calc_pyp_prob(a, (a+d), (a+(2*d)), (1-d)).toFixed(3), 0.93*w, 0.853*h);
+    context.fillText(calc_pyp_prob(a, (a+d), (a+(2*d)), (1-d)).toFixed(3), 0.93*w, 0.918*h);
+    context.fillText(calc_pyp_prob(a, (a+d), (a+(2*d)), (a+(3*d))).toFixed(3), 0.93*w, 0.983*h);
     return false;
 }
 
